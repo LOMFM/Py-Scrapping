@@ -6,7 +6,7 @@ This is based on the Django Framework.
 This is generalized scrapping application for the e-commerce site  
 Set the url type with the product collections and pagination  
 Set the scrapping object identifier and name  
-Import the setting information with CSV file  
+Import the setting information with CSV file   
 Export the result as CSV file  
 
 
