@@ -1,0 +1,101 @@
+{% load static %}
+<html>
+   <head>
+   	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+   	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+   </head>
+   <body>
+      {% csrf_token %}
+   	<div class="container-fluid" style="margin-top: 30px;">
+   		<div class="row col-md-12">
+               <div class="col-md-6">
+                  <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" id="scrap_request" name="scrap_request">
+                        <label class="custom-control-label" for="scrap_request">Link Scrap / Information Scrap</label>
+                  </div>
+                  <input type="hidden" name="base_url" id="base_url" value="{{base_url}}" />
+                  <div class="form-groups link-scrap">
+                     <label>Link Object Information</label>
+                     <div class="form-group">
+                         <label for="page_identy">Object Identifier</label>
+                         <input type="text" class="form-control" id="link_identy" name="link_identy" placeholder="div.product a" >
+                     </div>
+                     <div class="form-group">
+                         <label for="object_attr">Object Attribute ( Select the innerText )</label>
+                         <input type="text" class="form-control" id="link_attr" name="link_attr" placeholder="href" value="href">
+                     </div>
+                  </div>
+                  <div class="form-groups info-scrap" style="display: none;">
+                     <label>Information Object Information</label>
+                     <button class="btn btn-primary add-info" style="margin-bottom: 15px;">Insert Field</button>
+                           <table class="table table-striped table-bordered info-scrap-properties">
+                              <thead>
+                                 <tr>
+                                   <th>Information Identifier</th>
+                                   <th>Information Attribute</th>
+                                   <th>Information Label</th>                                
+                                   <th>Action</th>
+                                 </tr>
+                              </thead>
+                              <tbody class="info-properties">
+                                 <tr>
+                                    <td>
+                                       <input type="text" class="form-control object_identy" name="object_identy[]" placeholder="div.product a" >
+                                    </td>
+                                    <td>
+                                       <input type="text" class="form-control object_attr" name="object_attr[]" placeholder="href" >
+                                    </td>
+                                    <td>
+                                       <input type="text" class="form-control object_label" name="object_label[]" placeholder="name" >
+                                    </td>
+                                    <td>
+                                       <a class="btn btn-primary remove-item">Remove</a>
+                                    </td>
+                                 </tr>
+                              </tbody>
+                           </table>
+                  </div>
+               </div>
+               <div class="col-md-6">
+                  <table class="table table-bordered url-table">
+                     <thead>
+                        <tr>
+                          <th class="header-action">
+                            <a class='btn btn-primary scrap_all'>Scrap All Links</a>
+                            <a class='btn btn-primary import_links'>Import Links</a>
+                            <a class='btn btn-primary export_links'>Export Links</a>
+                          </th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        {% for url in urls %}
+                           <tr>
+                              <td class="url_addr">{{url}}</td>
+                              <td class="url_action"><a class="btn btn-primary scrap">Scrap</a></td>
+                           </tr>
+                        {% endfor %}
+                     </tbody>
+                  </table>
+               </div>
+              </div>
+      <div class="row col-md-12">
+        <div class="col-md-12">
+          <h5>Information Tables</h5>
+          <table class="info-table table table-bordered"> 
+            <thead>
+              <tr><th class="header-action"><a class="btn btn-primary info-export">Export CSV</a></th></tr>
+            </thead>
+            <tbody>
+              
+            </tbody>
+          </table>
+        </div>        
+      </div>
+   	</div>      
+    <script type="text/javascript" src="{% static 'js/fields.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/main.js' %}"></script>
+   </body>
+</html>

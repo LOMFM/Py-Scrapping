@@ -1,0 +1,80 @@
+.form-groups{
+				position: relative;
+				padding: 30px 15px 15px 15px;
+				border: 1px solid #b3b3b3;
+				border-radius: 10px;
+				margin-top: 30px;
+			}
+			.form-groups > label{
+				position: absolute;
+			    top: 0px;
+			    background: white;
+			    padding: 0px 10px;
+			    transform: translateY(-50%);
+			    font-weight: 600;
+			}
+
+			.form-groups > div{
+				margin-bottom: 1rem;
+			}
+
+			.form-group > label{
+				font-weight: 600;
+			}
+			.sites-form{
+				margin-top: 50px;
+			}
+			.btn{
+				color: white!important;
+			}
+			.scrapping-actions{
+				margin-top: 15px;
+			}
+
+			.table thead th{
+				font-size: 14px;
+				vertical-align: middle!important;
+			}
+
+			.header-action{
+				padding: 5px!important;
+				width: 130px;
+			}
+
+			.completed{
+				background-color: #eee;
+			}
+
+			tbody {
+			    display:block;
+			    max-height:500px;
+			    overflow:auto;
+			}
+			thead, tbody tr {
+			    display:table;
+			    width:100%;
+			    table-layout:fixed;/* even columns width , fix width of table too*/
+			}
+			thead {
+			    width: calc( 100% - ( 1em + 1px ) )/* scrollbar is average 1em/16px width, remove it from thead width */
+			}
+			table {
+			    width:400px;
+			}
+
+			.url-table .url_action{
+				width: 100px;
+			}
+
+			table .header-action{
+				text-align: right;
+			}
+
+			.info-properties{
+				max-height: 315px;
+			}
+
+			.info-table td{
+				word-break: break-all;
+			}
+

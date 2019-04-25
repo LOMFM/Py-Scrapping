@@ -1,0 +1,75 @@
+{% load static %}
+<html>
+   <head>
+   		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+   		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+		<script type="text/javascript" src="{% static 'js/setting.js' %}"></script>
+   </head>
+   <body>
+   	<div class="container">
+   		<div class="row">
+   			<div class="col-md-12">
+   				<form class="sites-form">
+   					<div class="form-inline">
+   						<label style="margin-right: 20px">Select the Site to scrap</label>
+	   					<select name="sites" class="custom-select" id="site-list">
+						    <option selected value="">Custom Select Menu</option>
+						    <option value="http://canadawheels.ca/">canadawheels.ca</option>
+						    <option value="https://pmctire.com/">pmctire.com</option>
+						    <option value="https://www.justtires.com/">justtires.com</option>
+						</select>
+   					</div>   					
+   				</form>
+   				<hr>
+   				<form action="/result" method="post" class="setting-form">
+   					{% csrf_token %}
+			      	<div class="form-group">
+					    <label for="site">Base URL Address</label>
+					    <input type="text" class="form-control" id="site" name="base_url" placeholder="https://sitename.com/">
+					</div>
+					<div class="form-groups">
+						<label> Request URL Settings </label>						
+						<div class="form-group">
+						    <label for="cat_form">Parameter Form</label>
+						    <input type="text" class="form-control" name="param_form" id="param_form" placeholder="https://sitename.com/{category}/{page_number} or https://sitename.com/tire?brandType={category}&page={page_number}" >
+						</div>
+						<div class="form-group">
+						    <label for="cat_values">Category Parameter Values</label>
+						    <input type="text" class="form-control" name="cat_values" id="cat_values" placeholder="category1, category2, category3...">
+						</div>
+						<div class="custom-control custom-switch">
+						    <input type="checkbox" class="custom-control-input" id="is_page" name="is_page" checked>
+						    <label class="custom-control-label" for="is_page">Pagination Available for First Page</label>
+						</div>
+						<div class="form-group param_form1_wrapper" style="display: none;">
+						    <label for="param_form1">Parameter Form without pagination</label>
+						    <input type="text" class="form-control" id="param_form1" name="param_form1" placeholder="https://sitename.com/{category}" >
+						</div>
+						<div class="form-group">
+						    <label for="page_identy">Last Page Identifier</label>
+						    <input type="text" class="form-control" id="page_identy" name="page_id" placeholder="ul li a" >
+						</div>
+					</div>
+					<div class="form-groups">
+						<label>Scrap Object Information</label>
+						<div class="form-group">
+						    <label for="page_identy">Object Identifier</label>
+						    <input type="text" class="form-control" id="object_identy" name="object_identy" placeholder="div.product a" >
+						</div>
+						<div class="form-group">
+						    <label for="object_attr">Object Attribute ( Select the innerText )</label>
+						    <input type="text" class="form-control" id="object_attr" name="object_attr" placeholder="href" >
+						</div>
+					</div>
+					<div class="scrapping-actions">
+						<button type="submit" class="btn btn-primary">Scrap</button>
+					</div>
+			      </form>
+   			</div>
+   		</div>
+   	</div>      
+   </body>   
+</html>
