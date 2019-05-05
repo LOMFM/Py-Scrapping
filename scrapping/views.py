@@ -32,19 +32,18 @@ def handle(request):
 				else:
 					page_str = str(page_number)
 					req = cat_req.replace("{page_number}", page_str)
-				print(req)
-				print(last_page)
-				print(parent_products_links)
-				with urllib.request.urlopen( req ) as response:
-					response_text = response.read()
-					soup = BeautifulSoup(response_text, 'html.parser')
-					product_els = soup.select( scrap_identy )
-					for product_el in product_els:
-						parent_products_links.append(getLink(base_url, param_form, product_el["href"]) )
-				last_page_el =soup.select(page_identy).pop()
-				last_page = int( last_page_el.text )
+				try:
+					with urllib.request.urlopen( req ) as response:
+						response_text = response.read()
+						soup = BeautifulSoup(response_text, 'html.parser')
+						product_els = soup.select( scrap_identy )
+						for product_el in product_els:
+							parent_products_links.append(getLink(base_url, param_form, product_el["href"]) )
+						last_page_el =soup.select(page_identy).pop()
+						last_page = int( last_page_el.text )
+				except Exception:
+					return render( request, 'settings.html', {"error" : "There are some errors in the scrapping. Please retry with new category and pagination"})
 				page_number += 1
-				
 		return render( request, "result.html", {"urls": parent_products_links, "base_url": base_url } )
 	else:
 		return render( request, "result.html" )
@@ -56,15 +55,18 @@ def linkScrap(request):
 		link_identy = request.POST["identy"]
 		link_attr = request.POST['attr']
 		links = []
-		with urllib.request.urlopen( url ) as response:
-			response_text = response.read()
-			soup = BeautifulSoup(response_text, 'html.parser')
-			link_els = soup.select( link_identy )
-			for link_el in link_els:
-				if 'href' in link_el.attrs:
-					link = getLink(base_url, url, link_el["href"])
-					if link not in links:
-						links.append(link)
+		try:
+			with urllib.request.urlopen( url ) as response:
+				response_text = response.read()
+				soup = BeautifulSoup(response_text, 'html.parser')
+				link_els = soup.select( link_identy )
+				for link_el in link_els:
+					if 'href' in link_el.attrs:
+						link = getLink(base_url, url, link_el["href"])
+						if link not in links:
+							links.append(link)
+		except Exception:
+			return JsonResponse( { 'status' : 'False'} )
 		res = {
 			'links' : links,
 			'status' : 'True'
@@ -85,18 +87,21 @@ def infoScrap(request):
 		labels = request.POST.getlist("labels[]")
 		url = request.POST["url"]
 		res = {}
-		with urllib.request.urlopen( url ) as response:
-			response_text = response.read()
-			soup = BeautifulSoup(response_text, 'html.parser')
-			for index in range(len(identies)):
-				identy = identies[index]
-				attr = attrs[index]
-				label = labels[index]
-				obj = soup.select_one(identy)
-				if attr == 'text':
-					res[label] = obj.text.strip()
-				elif attr in obj.attrs:
-					res[label] = obj[attr].strip()
+		try:
+			with urllib.request.urlopen( url ) as response:
+				response_text = response.read()
+				soup = BeautifulSoup(response_text, 'html.parser')
+				for index in range(len(identies)):
+					identy = identies[index]
+					attr = attrs[index]
+					label = labels[index]
+					obj = soup.select_one(identy)
+					if attr == 'text':
+						res[label] = obj.text.strip()
+					elif attr in obj.attrs:
+						res[label] = obj[attr].strip()
+		except Exception:
+			return JsonResponse({'status' : 'False'})
 		return JsonResponse({'status': 'True', 'data': res})
 	else:		
 		return JsonResponse({'method': "Get"})

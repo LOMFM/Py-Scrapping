@@ -112,25 +112,37 @@
 				    "Content-Type" : 'application/json',
 				    url: "/" + request_url,
 				    success: function(response) {
-				    	let res = response.data;
-					   	if( $(".info-table tr.schema").length == 0 ){
-					   		let schemas = [];
-					   		for( schema_key in res ){
-					   			schemas.push( schema_key );
-					   		}
-					   		generateRow(schemas, "schema");
-					   	}
-					   	let vals = [];
-					   	for( schema_key in res ){
-					   		vals.push( res[schema_key] );
-					   	}
-					   	generateRow(vals);
-					   	if( dom.hasClass="completed" ){
-					   		dom.removeClass("completed");
-					   	}
-					   	else{
-					   		dom.addClass("completed");
-					   	}
+				    	if ( response.status ){
+				    		let res = response.data;
+						   	if( $(".info-table tr.schema").length == 0 ){
+						   		let schemas = [];
+						   		for( schema_key in res ){
+						   			schemas.push( schema_key );
+						   		}
+						   		generateRow(schemas, "schema");
+						   	}
+						   	let vals = [];
+						   	for( schema_key in res ){
+						   		vals.push( res[schema_key] );
+						   	}
+						   	generateRow(vals);
+						   	if( dom.hasClass="completed" ){
+						   		dom.removeClass("completed");
+						   	}
+						   	else{
+						   		dom.addClass("completed");
+						   	}	
+				    	}
+				    	else{
+				    		if( dom.hasClass="completed" ){
+						   		dom.removeClass("completed");
+						   	}
+						   	else{
+						   		dom.addClass("completed");
+						   	}
+						   	dom.addClass("warning");
+				    	}
+				    	
 					   	allScrap(nextdom);
 					}
 				})
@@ -212,6 +224,88 @@
 			}
 			$(".info-table tbody").append(rowDom);
 		}
+
+		$(".setting-load-btn").click( function(){
+			$("#setting-load").click()
+		} )
+
+		$(".link-load-btn").click( function(){
+			$("#link-load").click()
+		} )
+
+		$("#setting-load").change(function(){
+			var file = $(this)[0].files[0];
+			var reader = new FileReader();
+			reader.onload = function(e) {
+  				var text = reader.result;
+
+  				var allTextLines = text.split(/\r\n|\n/);
+  				var headers = allTextLines[0].split(',');
+  				var lines = [];
+  				for (var i=1; i<allTextLines.length; i++) {
+			        var data = allTextLines[i].split(',');
+			        if (data.length == headers.length) {
+			            var tarr = {};
+			            for (var j=0; j<headers.length; j++) {
+			                tarr[headers[j]] = data[j];
+			            }
+			            lines.push(tarr);
+			        }
+			    }
+			    for( var i = 1 ; i <= lines.length ; i++ ){
+			    	if( $(".info-properties tr:nth-of-type(" + i + ")" ).length == 0 ){
+						$(".add-info").click();
+					}
+					let row = $(".info-properties tr:nth-of-type(" + i + ")" );
+					row.find(".object_identy").val(lines[i-1]["identy"]);
+					row.find(".object_attr").val(lines[i-1]["attr"]);
+					row.find(".object_label").val(lines[i-1]["label"]);
+			    }
+			}
+
+			reader.readAsText(file);
+		})
+
+
+
+		$("#import-link-file").change( function(){
+			var file = $(this)[0].files[0];
+			reader = new FileReader()
+			reader.onload = function(e) {
+  				var text = reader.result;
+  				var allTextLines = text.split(/\r\n|\n/);
+  				var headers = allTextLines[0].split(',');
+  				var links = [];
+  				$(".url-table tbody").html("");
+  				if( headers[0] = "link"){
+  					for (var i=1; i<allTextLines.length; i++) {
+				        var data = allTextLines[i].split(',');
+				        links.push( data[0] );
+				    }	
+  				}
+  				for( let i = 0 ; i < links.length ; i++ ){
+  					let row = $("<tr></tr>");
+  					let html = '<td class="url_addr">' + links[i] + '</td><td class="url_action"><a class="btn btn-primary scrap">Scrap</a></td>'
+  					row.html(html);
+  					$(".url-table tbody").append(row);
+  				}
+			}
+			reader.readAsText(file);
+		} )
+
+		$(".import_links").click( function(){
+			$("#import-link-file").click();
+		} )
+
+		$(".export_links").click( function(){
+			var csv = ["link"];
+			var rows = document.querySelectorAll(".url-table tbody tr");
+			for ( var i = 0 ; i < rows.length ; i++ ){
+				var link = rows[i].querySelector(".url_addr");
+				csv.push(link.innerText)
+			}
+			download_csv(csv.join('\n'), "links.csv")
+		} )
 	});
 })(jQuery);
 

@@ -16,7 +16,11 @@
                         <input type="checkbox" class="custom-control-input" id="scrap_request" name="scrap_request">
                         <label class="custom-control-label" for="scrap_request">Link Scrap / Information Scrap</label>
                   </div>
-                  <input type="hidden" name="base_url" id="base_url" value="{{base_url}}" />
+                  <div class="form-group">
+                         <label for="base_url">Base Url</label>
+                         <input type="text" name="base_url" class="form-control" id="base_url" value="{{base_url}}" />
+                  </div>
+                  
                   <div class="form-groups link-scrap">
                      <label>Link Object Information</label>
                      <div class="form-group">
@@ -31,6 +35,8 @@
                   <div class="form-groups info-scrap" style="display: none;">
                      <label>Information Object Information</label>
                      <button class="btn btn-primary add-info" style="margin-bottom: 15px;">Insert Field</button>
+                     <button class="btn btn-primary setting-load-btn" style="margin-bottom: 15px;">Load CSV</button>
+                     <input type="file" id="setting-load" style="display: none"/>
                            <table class="table table-striped table-bordered info-scrap-properties">
                               <thead>
                                  <tr>
@@ -43,7 +49,7 @@
                               <tbody class="info-properties">
                                  <tr>
                                     <td>
-                                       <input type="text" class="form-control object_identy" name="object_identy[]" placeholder="div.product a" >
+                                       <input type="text" class="form-control object_identy" name="object_identy[]" placeholder="div.product a">
                                     </td>
                                     <td>
                                        <input type="text" class="form-control object_attr" name="object_attr[]" placeholder="href" >
@@ -67,6 +73,7 @@
                             <a class='btn btn-primary scrap_all'>Scrap All Links</a>
                             <a class='btn btn-primary import_links'>Import Links</a>
                             <a class='btn btn-primary export_links'>Export Links</a>
+                            <input type="file" id="import-link-file" style="display: none" />
                           </th>
                         </tr>
                      </thead>

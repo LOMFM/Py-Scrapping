@@ -78,3 +78,7 @@
 				word-break: break-all;
 			}
 
+			.warning{
+				background-color: pink;
+			}
+
