@@ -252,6 +252,7 @@
 			            lines.push(tarr);
 			        }
 			    }
+			    $(".info-properties").html("");
 			    for( var i = 1 ; i <= lines.length ; i++ ){
 			    	if( $(".info-properties tr:nth-of-type(" + i + ")" ).length == 0 ){
 						$(".add-info").click();
