@@ -18,12 +18,12 @@
 					break;
 				case "https://pmctire.com/":
 					$("#site").val("https://pmctire.com/en/");
-					$("#param_form").val("https://pmctire.com/en/tires/{category}/stock-status/in-stock-out-of-stock/page/{page_number}.tire");
+					$("#param_form").val("https://pmctire.com/en/tires/page/{page_number}/show/100.tire");
 					// Set Pagination Setting
 					is_page_D.checked = false;
 					$(".param_form1_wrapper").css("display", "block");
-					$("#param_form1").val("https://pmctire.com/en/tires/{category}/stock-status/in-stock-out-of-stock")
-					$("#page_identy").val(".pages ol li:nth-last-of-type(2)");
+					$("#param_form1").val("https://pmctire.com/en/tires/show/100.tire")
+					$("#page_identy").val(".pages ol li");
 					// Set scrap object setting
 					$("#object_identy").val(".product-name a");
 					$("#object_attr").val("href");
