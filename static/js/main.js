@@ -42,39 +42,105 @@
 			$(this).closest("tr").remove();
 		});
 
+		$(".url-table").on("click", ".scrap_all", function(){
+			let dom = $(".url-table tbody tr:first-child");
+			allScrap( dom );
+		})
+
 		$(".url-table").on("click", ".scrap", function(){
+			let dom = $(this).closest("tr")
+			scrap(dom)
+		})
+
+		function scrap(dom){
 			let token = $("[name=csrfmiddlewaretoken]").val();
 			let data = {};
 			if( request_url == "info" ){
-
+				let identies = [];
+				let attrs = [];
+				let labels = [];
+				document.querySelectorAll(".object_identy").forEach( e => {
+					identies.push( e.value );
+				});
+				document.querySelectorAll(".object_attr").forEach( e => {
+					attrs.push( e.value );
+				})
+				document.querySelectorAll(".object_label").forEach( e => {
+					labels.push( e.value );
+				})
+				data = {
+					identies : identies,
+					attrs : attrs,
+					labels : labels,
+					url : dom.find(".url_addr").text(),
+					base_url : $("#base_url").val()
+				}
+				$.ajax({
+					"type" : "POST",
+				    "beforeSend" : function(xhr, settings) {
+				        xhr.setRequestHeader("X-CSRFToken", token);
+				    },
+				    "data" : data,
+				    "Content-Type" : 'application/json',
+				    url: "/" + request_url,
+				    success: function(response) {
+				    	if ( response.status == "True" ){
+				    		let res = response.data;
+						   	if( $(".info-table tr.schema").length == 0 ){
+						   		let schemas = [];
+						   		for( schema_key in res ){
+						   			schemas.push( schema_key );
+						   		}
+						   		schemas.push("url");
+						   		generateRow(schemas, "schema");
+						   	}
+						   	let vals = [];
+						   	for( schema_key in res ){
+						   		vals.push( res[schema_key] );
+						   	}
+						   	vals.push(data.url);
+						   	generateRow(vals);
+						   	if( dom.hasClass("completed") ){
+						   		dom.removeClass("completed");
+						   	}
+						   	else{
+						   		dom.addClass("completed");
+						   	}	
+						   	dom.removeClass("warning");
+				    	}
+				    	else{
+				    		if( dom.hasClass("completed") ){
+						   		dom.removeClass("completed");
+						   	}
+						   	else{
+						   		dom.addClass("completed");
+						   	}
+						   	dom.addClass("warning");
+				    	}
+					}
+				})
 			}
 			else{
 				data = {
 					identy : $("#link_identy").val(),
 					attr : $("#link_attr").val(),
-					url : $(this).closest("tr").find(".url_addr").text(),
+					url : dom.find(".url_addr").text(),
 					base_url : $("#base_url").val()
 				}
-			}
-			$.ajax({
-				"type" : "POST",
-			    "beforeSend" : function(xhr, settings) {
-			        xhr.setRequestHeader("X-CSRFToken", token);
-			    },
-			    "data" : data,
-			    "Content-Type" : 'application/json',
-			    url: "/" + request_url,
-			    success: function(msg) {
-				   console.log( msg )
-				  }
-
-			});
-		})
-
-		$(".url-table").on("click", ".scrap_all", function(){
-			let dom = $(".url-table tbody tr:first-child");
-			allScrap( dom );
-		})
+				$.ajax({
+					"type" : "POST",
+				    "beforeSend" : function(xhr, settings) {
+				        xhr.setRequestHeader("X-CSRFToken", token);
+				    },
+				    "data" : data,
+				    "Content-Type" : 'application/json',
+				    url: "/" + request_url,
+				    success: function(response) {
+					   replaceLinks(response.links, dom);
+					}
+				});
+			}	
+		}
 
 		function allScrap( dom ){
 			if( dom.length == 0 ){
@@ -112,29 +178,32 @@
 				    "Content-Type" : 'application/json',
 				    url: "/" + request_url,
 				    success: function(response) {
-				    	if ( response.status ){
+				    	if ( response.status == "True" ){
 				    		let res = response.data;
 						   	if( $(".info-table tr.schema").length == 0 ){
 						   		let schemas = [];
 						   		for( schema_key in res ){
 						   			schemas.push( schema_key );
 						   		}
+						   		schemas.push("url");
 						   		generateRow(schemas, "schema");
 						   	}
 						   	let vals = [];
 						   	for( schema_key in res ){
 						   		vals.push( res[schema_key] );
 						   	}
+						   	vals.push(data.url)
 						   	generateRow(vals);
-						   	if( dom.hasClass="completed" ){
+						   	if( dom.hasClass("completed") ){
 						   		dom.removeClass("completed");
 						   	}
 						   	else{
 						   		dom.addClass("completed");
-						   	}	
+						   	}
+						   	dom.removeClass("warning")
 				    	}
 				    	else{
-				    		if( dom.hasClass="completed" ){
+				    		if( dom.hasClass("completed") ){
 						   		dom.removeClass("completed");
 						   	}
 						   	else{
@@ -307,6 +376,14 @@
 			}
 			download_csv(csv.join('\n'), "links.csv")
 		} )
+
+		$(".clear-infos").click( function(){
+			document.querySelector(".info-table tbody").innerHTML = "";
+		} )
+
+		$(".remove-completed").click(function(){
+			document.querySelectorAll(".url-table tbody tr:not(.warning)").forEach( e => e.remove() )
+		})
 	});
 })(jQuery);
 

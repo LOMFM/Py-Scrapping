@@ -67,7 +67,7 @@
 			}
 
 			table .header-action{
-				text-align: right;
+				text-align: left;
 			}
 
 			.info-properties{
@@ -76,6 +76,7 @@
 
 			.info-table td{
 				word-break: break-all;
+				width: 150px;
 			}
 
 			.warning{
