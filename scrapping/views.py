@@ -95,18 +95,18 @@ def linkScrap(request):
 		link_identy = request.POST["identy"]
 		link_attr = request.POST['attr']
 		links = []
-		try:
-			with urllib.request.urlopen( url ) as response:
-				response_text = response.read()
-				soup = BeautifulSoup(response_text, 'html.parser')
-				link_els = soup.select( link_identy )
-				for link_el in link_els:
-					if 'href' in link_el.attrs:
-						link = getLink(base_url, url, link_el["href"])
-						if link not in links:
-							links.append(link)
-		except Exception:
-			return JsonResponse( { 'status' : 'False'} )
+		# try:
+		with urllib.request.urlopen( url ) as response:
+			response_text = response.read()
+			soup = BeautifulSoup(response_text, 'html.parser')
+			link_els = soup.select( link_identy )
+			for link_el in link_els:
+				if 'href' in link_el.attrs:
+					link = getLink(base_url, url, link_el["href"])
+					if link not in links:
+						links.append(link)
+		
+			# return JsonResponse( { 'status' : 'False'} )
 		res = {
 			'links' : links,
 			'status' : 'True'
@@ -135,11 +135,14 @@ def infoScrap(request):
 					identy = identies[index]
 					attr = attrs[index]
 					label = labels[index]
-					obj = soup.select_one(identy)
-					if attr == 'text':
-						res[label] = obj.text.strip()
-					elif attr in obj.attrs:
-						res[label] = obj[attr].strip()
+					try:
+						obj = soup.select_one(identy)
+						if attr == 'text':
+							res[label] = obj.text.strip()
+						elif attr in obj.attrs:
+							res[label] = obj[attr].strip()
+					except Exception:
+						res[label]=""
 		except Exception:
 			return JsonResponse({'status' : 'False'})
 		return JsonResponse({'status': 'True', 'data': res})

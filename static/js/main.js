@@ -17,7 +17,7 @@
                                     </td>`;
 
         let link_text = `<td class="url_addr">{link}</td>
-                              <td class="url_action"><a class="btn btn-primary scrap">Scrap</a></td>`
+                              <td class="url_action"><a class="btn btn-primary scrap">Scrap</a><a class="btn btn-primary scrap_from">From</a></td>`
 
 		$("#scrap_request").change( function(){
 			if( request_D.checked ){
@@ -355,7 +355,7 @@
   				}
   				for( let i = 0 ; i < links.length ; i++ ){
   					let row = $("<tr></tr>");
-  					let html = '<td class="url_addr">' + links[i] + '</td><td class="url_action"><a class="btn btn-primary scrap">Scrap</a></td>'
+  					let html = '<td class="url_addr">' + links[i] + '</td><td class="url_action"><a class="btn btn-primary scrap">Scrap</a><a class="btn btn-primary scrap_from">From</a></td>'
   					row.html(html);
   					$(".url-table tbody").append(row);
   				}
@@ -383,6 +383,15 @@
 
 		$(".remove-completed").click(function(){
 			document.querySelectorAll(".url-table tbody tr:not(.warning)").forEach( e => e.remove() )
+		})
+
+		// $(".scrap_from").click(function(){
+		// 	let dom = $(this).closest("tr");
+		// 	allScrap( dom );
+		// })
+		$(".url-table").on("click", ".scrap_from", function(){
+			let dom = $(this).closest("tr");
+			allScrap( dom );
 		})
 	});
 })(jQuery);
